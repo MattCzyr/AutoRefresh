@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerSelectionList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,6 +21,7 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 
 	private GuiScreen parentScreen;
 	private GuiButton buttonAutoRefresh;
+	private ServerSelectionList serverListSelector;
 	private boolean autoRefreshEnabled;
 	private int ticksSinceRefresh;
 	private int selected;
@@ -35,6 +37,7 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	@Override
 	public void initGui() {
 		super.initGui();
+		setupServerSelector();
 		if (selected >= 0 && selected < getServerList().countServers()) {
 			selectServer(selected);
 		}
@@ -57,8 +60,8 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 				ticksSinceRefresh++;
 			}
 
-			if (!hasAlerted) {
-				final int index = getServerSelector().getSelected();
+			if (!hasAlerted && serverListSelector != null) {
+				final int index = serverListSelector.getSelected();
 				if (index >= 0 && index < getServerList().countServers() && getServerList().getServerData(index).pingToServer > 0) {
 					mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
 					hasAlerted = true;
@@ -82,22 +85,17 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	}
 
 	private void refresh() {
-		final ServerSelectionList serverSelector = getServerSelector();
-		if (serverSelector != null) {
-			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverSelector != null ? serverSelector.getSelected() : -1));
-		}
+		mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverListSelector != null ? serverListSelector.getSelected() : -1));
 	}
 
-	private ServerSelectionList getServerSelector() {
+	private void setupServerSelector() {
 		try {
-			final Field f = getClass().getSuperclass().getDeclaredField("serverListSelector");
+			final Field f = ReflectionHelper.findField(GuiMultiplayer.class, "serverListSelector", "field_146803_h");
 			f.setAccessible(true);
-			return (ServerSelectionList) f.get(this);
+			serverListSelector = (ServerSelectionList) f.get(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return null;
 	}
 
 }
