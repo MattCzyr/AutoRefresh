@@ -23,13 +23,19 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	private boolean autoRefreshEnabled;
 	private int ticksSinceRefresh;
 	private int selected;
+	private int amountScrolled;
 	private boolean hasAlerted;
 
-	public GuiAutoRefresh(GuiScreen parentScreen, int selected) {
+	public GuiAutoRefresh(GuiScreen parentScreen, int selected, int amountScrolled) {
 		super(parentScreen);
 		this.parentScreen = parentScreen;
 		this.selected = selected;
+		this.amountScrolled = amountScrolled;
 		autoRefreshEnabled = true;
+	}
+
+	public GuiAutoRefresh(GuiScreen parentScreen) {
+		this(parentScreen, -1, -1);
 	}
 
 	@Override
@@ -38,6 +44,10 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 		setupServerSelector();
 		if (selected >= 0 && selected < func_146795_p().countServers()) {
 			func_146790_a(selected);
+		}
+		
+		if (serverListSelector != null && amountScrolled >= 0) {
+			serverListSelector.scrollBy(amountScrolled);
 		}
 	}
 
@@ -86,7 +96,11 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	}
 
 	private void refresh() {
-		mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverListSelector != null ? serverListSelector.func_148193_k() : -1));
+		if (serverListSelector != null) {
+			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverListSelector.func_148193_k(), serverListSelector.getAmountScrolled()));
+		} else {
+			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen));
+		}
 	}
 
 	private void setupServerSelector() {

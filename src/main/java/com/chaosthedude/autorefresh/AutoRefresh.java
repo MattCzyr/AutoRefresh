@@ -32,7 +32,7 @@ public class AutoRefresh {
 	@SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
 	public void onGuiOpen(GuiOpenEvent event) {
 		if (event.gui != null && event.gui.getClass() == GuiMultiplayer.class) {
-			event.gui = new GuiAutoRefresh(Minecraft.getMinecraft().currentScreen, -1);
+			event.gui = new GuiAutoRefresh(Minecraft.getMinecraft().currentScreen);
 		}
 	}
 
