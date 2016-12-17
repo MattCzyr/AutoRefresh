@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = AutoRefresh.MODID, name = AutoRefresh.NAME, version = AutoRefresh.VERSION, acceptedMinecraftVersions = "[1.11]")
+@Mod(modid = AutoRefresh.MODID, name = AutoRefresh.NAME, version = AutoRefresh.VERSION, acceptedMinecraftVersions = "[1.10,1.10.2]")
 
 public class AutoRefresh {
 
