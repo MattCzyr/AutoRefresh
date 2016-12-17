@@ -1,0 +1,16 @@
+[
+{
+  "modid": "autorefresh",
+  "name": "Auto Refresh",
+  "description": "Automatically refreshes your server list and alerts you when your selected server comes online.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ChaosTheDude"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
