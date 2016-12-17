@@ -48,7 +48,7 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 			selectServer(selected);
 		}
 		
-		if (amountScrolled >= 0) {
+		if (serverListSelector != null && amountScrolled >= 0) {
 			serverListSelector.scrollBy(amountScrolled);
 		}
 	}
