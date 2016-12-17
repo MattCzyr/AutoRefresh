@@ -3,17 +3,17 @@ package com.chaosthedude.autorefresh;
 import com.chaosthedude.autorefresh.config.AutoRefreshConfig;
 import com.chaosthedude.autorefresh.gui.GuiAutoRefresh;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = AutoRefresh.MODID, name = AutoRefresh.NAME, version = AutoRefresh.VERSION, acceptedMinecraftVersions = "[1.10,1.10.2]")
+@Mod(modid = AutoRefresh.MODID, name = AutoRefresh.NAME, version = AutoRefresh.VERSION, acceptedMinecraftVersions = "[1.7.10]")
 
 public class AutoRefresh {
 
@@ -31,8 +31,8 @@ public class AutoRefresh {
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
 	public void onGuiOpen(GuiOpenEvent event) {
-		if (event.getGui() != null && event.getGui().getClass() == GuiMultiplayer.class) {
-			event.setGui(new GuiAutoRefresh(Minecraft.getMinecraft().currentScreen, -1));
+		if (event.gui != null && event.gui.getClass() == GuiMultiplayer.class) {
+			event.gui = new GuiAutoRefresh(Minecraft.getMinecraft().currentScreen, -1);
 		}
 	}
 

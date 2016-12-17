@@ -1,19 +1,18 @@
 package com.chaosthedude.autorefresh.gui;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 import com.chaosthedude.autorefresh.config.AutoRefreshConfig;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerSelectionList;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class GuiAutoRefresh extends GuiMultiplayer {
@@ -35,15 +34,16 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		if (selected >= 0 && selected < getServerList().countServers()) {
-			selectServer(selected);
+		if (selected >= 0 && selected < func_146795_p().countServers()) {
+			func_146790_a(selected);
 		}
 	}
 
 	@Override
-	public void createButtons() {
-		super.createButtons();
-		buttonAutoRefresh = addButton(new GuiButton(8, width - 105, 5, 100, 20, I18n.format("string.autoRefresh") + ": " + I18n.format("string.on")));
+	public void func_146794_g() {
+		super.func_146794_g();
+		buttonAutoRefresh = new GuiButton(8, width - 105, 5, 100, 20, I18n.format("string.autoRefresh") + ": " + I18n.format("string.on"));
+		buttonList.add(buttonAutoRefresh);
 	}
 
 	@Override
@@ -58,9 +58,9 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 			}
 
 			if (!hasAlerted) {
-				final int index = getServerSelector().getSelected();
-				if (index >= 0 && index < getServerList().countServers() && getServerList().getServerData(index).pingToServer > 0) {
-					mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
+				final int index = getServerSelector().func_148193_k();
+				if (index >= 0 && index < func_146795_p().countServers() && func_146795_p().getServerData(index).pingToServer > 0) {
+					mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("random.orb"), 1.0F));
 					hasAlerted = true;
 				}
 			}
@@ -68,7 +68,7 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (button == buttonAutoRefresh) {
 			toggleAutoRefresh();
 		} else {
@@ -84,13 +84,13 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	private void refresh() {
 		final ServerSelectionList serverSelector = getServerSelector();
 		if (serverSelector != null) {
-			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverSelector != null ? serverSelector.getSelected() : -1));
+			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverSelector != null ? serverSelector.func_148193_k() : -1));
 		}
 	}
 
 	private ServerSelectionList getServerSelector() {
 		try {
-			final Field f = getClass().getSuperclass().getDeclaredField("serverListSelector");
+			final Field f = getClass().getSuperclass().getDeclaredField("field_146803_h");
 			f.setAccessible(true);
 			return (ServerSelectionList) f.get(this);
 		} catch (Exception e) {
