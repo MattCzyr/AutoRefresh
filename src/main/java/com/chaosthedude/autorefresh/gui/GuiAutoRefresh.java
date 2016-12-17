@@ -25,13 +25,19 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	private boolean autoRefreshEnabled;
 	private int ticksSinceRefresh;
 	private int selected;
+	private int amountScrolled;
 	private boolean hasAlerted;
 
-	public GuiAutoRefresh(GuiScreen parentScreen, int selected) {
+	public GuiAutoRefresh(GuiScreen parentScreen, int selected, int amountScrolled) {
 		super(parentScreen);
 		this.parentScreen = parentScreen;
 		this.selected = selected;
+		this.amountScrolled = amountScrolled;
 		autoRefreshEnabled = true;
+	}
+
+	public GuiAutoRefresh(GuiScreen parentScreen) {
+		this(parentScreen, -1, -1);
 	}
 
 	@Override
@@ -40,6 +46,10 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 		setupServerSelector();
 		if (selected >= 0 && selected < getServerList().countServers()) {
 			selectServer(selected);
+		}
+		
+		if (amountScrolled >= 0) {
+			serverListSelector.scrollBy(amountScrolled);
 		}
 	}
 
@@ -87,7 +97,11 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	}
 
 	private void refresh() {
-		mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverListSelector != null ? serverListSelector.getSelected() : -1));
+		if (serverListSelector != null) {
+			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverListSelector.getSelected(), serverListSelector.getAmountScrolled()));
+		} else {
+			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen));
+		}
 	}
 
 	private void setupServerSelector() {
