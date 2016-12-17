@@ -19,6 +19,7 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 
 	private GuiScreen parentScreen;
 	private GuiButton buttonAutoRefresh;
+	private ServerSelectionList serverListSelector;
 	private boolean autoRefreshEnabled;
 	private int ticksSinceRefresh;
 	private int selected;
@@ -34,6 +35,7 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	@Override
 	public void initGui() {
 		super.initGui();
+		setupServerSelector();
 		if (selected >= 0 && selected < func_146795_p().countServers()) {
 			func_146790_a(selected);
 		}
@@ -57,8 +59,8 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 				ticksSinceRefresh++;
 			}
 
-			if (!hasAlerted) {
-				final int index = getServerSelector().func_148193_k();
+			if (!hasAlerted && serverListSelector != null) {
+				final int index = serverListSelector.func_148193_k();
 				if (index >= 0 && index < func_146795_p().countServers() && func_146795_p().getServerData(index).pingToServer > 0) {
 					mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("random.orb"), 1.0F));
 					hasAlerted = true;
@@ -82,22 +84,17 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	}
 
 	private void refresh() {
-		final ServerSelectionList serverSelector = getServerSelector();
-		if (serverSelector != null) {
-			mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverSelector != null ? serverSelector.func_148193_k() : -1));
-		}
+		mc.displayGuiScreen(new GuiAutoRefresh(parentScreen, serverListSelector != null ? serverListSelector.func_148193_k() : -1));
 	}
 
-	private ServerSelectionList getServerSelector() {
+	private void setupServerSelector() {
 		try {
 			final Field f = getClass().getSuperclass().getDeclaredField("field_146803_h");
 			f.setAccessible(true);
-			return (ServerSelectionList) f.get(this);
+			serverListSelector = (ServerSelectionList) f.get(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return null;
 	}
 
 }
