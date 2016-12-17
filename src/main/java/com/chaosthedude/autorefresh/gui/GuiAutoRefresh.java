@@ -74,6 +74,8 @@ public class GuiAutoRefresh extends GuiMultiplayer {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == buttonAutoRefresh) {
 			toggleAutoRefresh();
+		} else if (button.id == 8) {
+			refresh();
 		} else {
 			super.actionPerformed(button);
 		}
